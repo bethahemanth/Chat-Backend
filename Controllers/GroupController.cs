@@ -28,8 +28,8 @@ public class GroupController : ControllerBase
     [HttpGet("groupid/{user_id}")]
     public IActionResult GetGroupIdByMember(int user_id)
     {
-        var groupId = _groupService.GetGroupIdByMemberId(user_id);
-        return Ok(groupId);
+        var groupIds = _groupService.GetGroupIdByMemberId(user_id);
+        return Ok(groupIds);
     }
 
     [HttpPost]
@@ -61,6 +61,13 @@ public class GroupController : ControllerBase
     public IActionResult GetGroupsByOwner(int owner_id)
     {
         var groups = _groupService.GetGroupByOwnerId(owner_id);
+        return Ok(groups);
+    }
+
+    [HttpGet("GetGroupInfo")]
+    public IActionResult GetGroupInfo(int id)
+    {
+        var groups = _groupService.GetGroupInfo(id);
         return Ok(groups);
     }
 

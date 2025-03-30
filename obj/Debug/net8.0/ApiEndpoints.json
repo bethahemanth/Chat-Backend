@@ -169,6 +169,22 @@
   },
   {
     "ContainingType": "GroupController",
+    "Method": "GetGroupInfo",
+    "RelativePath": "api/groups/GetGroupInfo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "GroupController",
     "Method": "GetGroupIdByMember",
     "RelativePath": "api/groups/groupid/{user_id}",
     "HttpMethod": "GET",
@@ -374,6 +390,32 @@
     "ReturnTypes": [
       {
         "Type": "System.Collections.Generic.List\u00601[[System.Int32, System.Private.CoreLib, Version=8.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "ChatAppBackend.Controllers.MessageController",
+    "Method": "GetGroupMessage",
+    "RelativePath": "api/messages/GetGroupMessage",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.List\u00601[[ChatAppBackend.Models.Message, ChatApplication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",

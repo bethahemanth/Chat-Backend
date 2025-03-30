@@ -123,9 +123,11 @@ namespace ChatAppBackend.Controllers
             return contacts;
         }
 
-
-
-
+        [HttpGet("GetGroupMessage")]
+        public List<Message> GetGroupMessage(int id)
+        {
+            return _messageService.GetGroupMessage(id);
+        }
 
 
     }

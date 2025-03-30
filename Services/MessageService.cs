@@ -202,6 +202,7 @@ namespace ChatApplication.Services
                 Conditions = new List<string>()
             };
             query.Conditions.Add($"sender_id={id}");
+            query.Conditions.Add($"receiver_id<{10000}");
             return _repo.GetRecords<Message>(query);
         }
 
@@ -213,8 +214,23 @@ namespace ChatApplication.Services
                 Conditions = new List<string>()
             };
             query.Conditions.Add($"receiver_id={id}");
+            query.Conditions.Add($"receiver_id<{10000}");
             return _repo.GetRecords<Message>(query);
         }
 
+        public List<Message> GetGroupMessage(int id)
+        {
+            Query query = new Query()
+            {
+                TableName = "messages",
+                Conditions = new List<string>()
+            };
+            query.Conditions.Add($"receiver_id={10000+id}");
+
+            List<Message> temp = _repo.GetRecords<Message>(query);
+            temp.ForEach(msg => msg.receiver_id = msg.receiver_id - 10000);
+            return temp;
         }
+
     }
+}

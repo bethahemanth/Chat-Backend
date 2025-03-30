@@ -32,5 +32,7 @@ namespace ChatApplication.Services.Service_Contracts
 
         List<Message> GetInverseMessages(int id);
 
+        List<Message> GetGroupMessage(int id);
+
     }
 }

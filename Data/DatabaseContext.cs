@@ -84,13 +84,30 @@ namespace ChatApplication.Data
         {
             query = $"with cte as ({query}) select json_agg(cte) from cte";
             List<string> result = GetResult(query);
-            List<T> records = [];
+
+            // Initialize an empty list of T
+            List<T> records = new List<T>();
+
             if (result.Count > 0)
             {
-                records = JsonConvert.DeserializeObject<List<T>>(result[0]);
+                // Log or inspect result[0]
+                Console.WriteLine($"Result: {result[0]}");
+
+                try
+                {
+                    // Attempt to deserialize the entire result
+                    records = JsonConvert.DeserializeObject<List<T>>(result[0]);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error deserializing: {ex.Message}");
+                }
             }
+
             return records;
         }
+
+
 
         public List<string> GetResult(string query)
         {

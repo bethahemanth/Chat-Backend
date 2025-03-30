@@ -4,6 +4,6 @@
     {
         public int group_id { get; set; }
         public int user_id { get; set; }
-        public DateTime joined_at { get; set; } = DateTime.UtcNow;
+        public DateTime joined_at { get; set; }
     }
 }
