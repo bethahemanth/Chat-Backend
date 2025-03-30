@@ -1,4 +1,5 @@
 using ChatAppBackend.Hubs;
+using ChatApplication;
 using ChatApplication.Data;
 using ChatApplication.Data.ChatAppBackend.Data;
 using ChatApplication.Repositories;
@@ -16,6 +17,7 @@ public class Program
         // Add services to the container.
         builder.Services.AddControllers();
         builder.Services.AddSignalR(); // Register SignalR services
+
         builder.Services.AddCors(options =>
         {
             options.AddPolicy("CorsPolicy", builder =>
@@ -34,9 +36,12 @@ public class Program
                 Version = "v1",
                 Description = "API for Chat Application"
             });
+
+            // ✅ Support File Uploads in Swagger
+            options.OperationFilter<FileUploadOperationFilter>();
         });
 
-        // Register your own services
+        // Register application services
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<IGroupService, GroupService>();
         builder.Services.AddScoped<IMessageService, MessageService>();
@@ -62,7 +67,7 @@ public class Program
         app.UseCors("CorsPolicy");
         app.UseRouting();
         app.UseAuthorization();
-
+        app.UseStaticFiles();
         app.MapControllers(); // Map API controllers
         app.MapHub<ChatHub>("/chatHub");
         app.Run(); // Run the application

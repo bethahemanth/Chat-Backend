@@ -9,6 +9,7 @@ namespace ChatApplication.Services.Service_Contracts
         string UpdateUser(int id, User user);
         string DeleteUser(int id);
         List<User> GetAllUsers();
+        string UploadProfilePicture(string filePath);
 
 
     }

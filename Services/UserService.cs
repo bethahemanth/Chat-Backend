@@ -98,6 +98,15 @@ namespace ChatApplication.Services
             };
             return _repo.UpdateRecord(query);
         }
+        public string UploadProfilePicture(string filePath)
+  {
+      string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(filePath);
+      string fullPath = Path.Combine("wwwroot/uploads", uniqueFileName);
 
+      File.Copy(filePath, fullPath, true);
+
+      // Return the image URL (adjust based on actual API serving logic)
+      return $"http://localhost:5195/uploads/{uniqueFileName}";
+  }
     }
     }

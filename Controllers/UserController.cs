@@ -19,12 +19,19 @@ public class UserController : ControllerBase
         return _userService.RegisterUser(user);
     }
 
-    [HttpGet]
-    [ActionName("GetUserByID")]
-    public User GetUserByID(int id)
+   [HttpGet]
+[ActionName("GetUserByID")]
+public User GetUserByID(int id)
+{
+    var user = _userService.GetUser(id);
+
+    if (user != null && !string.IsNullOrEmpty(user.profile_picture))
     {
-        return _userService.GetUser(id);
+        user.profile_picture = $"http://localhost:5195/uploads/{Path.GetFileName(user.profile_picture)}";
     }
+
+    return user;
+}
 
     [HttpGet]
     [ActionName("GetUser")]
@@ -91,5 +98,35 @@ public class UserController : ControllerBase
         contacts.ForEach(c => result.Add(users.FirstOrDefault(u => u.user_id == c)));
         return result;
     }
+
+      [HttpPost]
+  [ActionName("UploadProfilePicture")]
+  public IActionResult UploadProfilePicture([FromForm] IFormFile file)
+  {
+      if (file == null || file.Length == 0)
+      {
+          return BadRequest(new { message = "No file uploaded" });
+      }
+
+      string uploadsFolder = Path.Combine("wwwroot/uploads");
+      if (!Directory.Exists(uploadsFolder))
+      {
+          Directory.CreateDirectory(uploadsFolder);
+      }
+
+      // Generate a unique filename
+      string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+      string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+      // Save the file
+      using (var fileStream = new FileStream(filePath, FileMode.Create))
+      {
+          file.CopyTo(fileStream);
+      }
+
+      // **Return the correct absolute URL**
+      string fileUrl = $"http://localhost:5195/uploads/{uniqueFileName}";
+      return Ok(new { imageUrl = fileUrl });
+  }
 
 }
