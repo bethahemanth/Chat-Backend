@@ -33,26 +33,37 @@ namespace ChatApplication.Services
             return _repo.InsertRecord(query);
         }
 
-        public string DeleteMember(int user_id)
+        public string DeleteMember(int group_id, int user_id)
         {
             Query query = new Query
             {
                 TableName = "group_members",
                 Conditions = new List<string>()
             };
-            query.Conditions.Add($"group_member_id={user_id}");
+            query.Conditions.Add($"user_id={user_id}");
+            query.Conditions.Add($"group_id={group_id}");
             return _repo.DeleteRecord(query);
         }
 
-        public GroupMember GetMember(int user_id)
+        public List<User> GetMember(int user_id)
         {
             Query query = new Query
             {
                 TableName = "group_members",
                 Conditions = new List<string>()
             };
-            query.Conditions.Add($"group_member_id={user_id}");
-            return _repo.GetRecords<GroupMember>(query).FirstOrDefault();
+            query.Conditions.Add($"group_id={user_id}");
+            List<GroupMember> temp= _repo.GetRecords<GroupMember>(query);
+            Query subQuery = new Query
+            {
+                TableName = "users",
+            };
+            List<User> allUsers = _repo.GetRecords<User>(subQuery);
+            List<User> result = new List<User>();
+            temp.ForEach(memb => result.Add(allUsers.FirstOrDefault(user=>user.user_id==memb.user_id)));
+
+            return result; 
+
         }
     }
 }

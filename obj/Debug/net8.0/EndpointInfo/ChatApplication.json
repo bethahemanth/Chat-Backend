@@ -382,6 +382,14 @@
         ],
         "parameters": [
           {
+            "name": "group_id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
             "name": "user_id",
             "in": "path",
             "required": true,
@@ -415,14 +423,14 @@
         }
       }
     },
-    "/api/groupmembers/{user_id}": {
+    "/api/groupmembers/{group_id}": {
       "get": {
         "tags": [
           "GroupMembers"
         ],
         "parameters": [
           {
-            "name": "user_id",
+            "name": "group_id",
             "in": "path",
             "required": true,
             "schema": {

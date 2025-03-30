@@ -66,13 +66,13 @@
   {
     "ContainingType": "ChatApplication.Controllers.GroupMembersController",
     "Method": "GetMember",
-    "RelativePath": "api/groupmembers/{user_id}",
+    "RelativePath": "api/groupmembers/{group_id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [
       {
-        "Name": "user_id",
+        "Name": "group_id",
         "Type": "System.Int32",
         "IsRequired": true
       }
@@ -97,6 +97,11 @@
     "IsController": true,
     "Order": 0,
     "Parameters": [
+      {
+        "Name": "group_id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
       {
         "Name": "user_id",
         "Type": "System.Int32",

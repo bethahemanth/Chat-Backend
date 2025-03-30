@@ -36,9 +36,9 @@ namespace ChatApplication.Controllers
 
         // DELETE api/groupmembers/delete/{group_member_id}
         [HttpDelete("delete/{user_id}")]
-        public ActionResult<string> DeleteMember(int user_id)
+        public ActionResult<string> DeleteMember(int group_id,int user_id)
         {
-            var result = _groupMembersService.DeleteMember(user_id);
+            var result = _groupMembersService.DeleteMember(group_id,user_id);
             if (string.IsNullOrEmpty(result))
             {
                 return BadRequest("Failed to delete group member.");
@@ -48,10 +48,10 @@ namespace ChatApplication.Controllers
         }
 
         // GET api/groupmembers/{group_member_id}
-        [HttpGet("{user_id}")]
-        public ActionResult<GroupMember> GetMember(int user_id)
+        [HttpGet("{group_id}")]
+        public ActionResult<GroupMember> GetMember(int group_id)
         {
-            var member = _groupMembersService.GetMember(user_id);
+            var member = _groupMembersService.GetMember(group_id);
             if (member == null)
             {
                 return NotFound("Group member not found.");
