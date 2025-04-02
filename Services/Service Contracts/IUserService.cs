@@ -11,6 +11,7 @@ namespace ChatApplication.Services.Service_Contracts
         List<User> GetAllUsers();
         string UploadProfilePicture(string filePath);
 
+        int GetLatestUserById(int user_id);
 
     }
 }

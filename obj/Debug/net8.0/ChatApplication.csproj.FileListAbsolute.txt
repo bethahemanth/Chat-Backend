@@ -44,3 +44,8 @@ C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\
 C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Microsoft.Extensions.Hosting.Abstractions.dll
 C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Microsoft.Extensions.ObjectPool.dll
 C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\ChatApplication.staticwebassets.runtime.json
+C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
+C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Scrutor.dll
+C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
+C:\Users\hemanthb\source\repos\ChatApplication\ChatApplication\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll

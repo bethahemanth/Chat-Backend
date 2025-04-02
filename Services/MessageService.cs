@@ -20,6 +20,7 @@ namespace ChatApplication.Services
         {
             try
             {
+                // Construct the message insertion query
                 Query query = new Query()
                 {
                     TableName = "messages",
@@ -35,17 +36,47 @@ namespace ChatApplication.Services
                 }
             }
                 };
+
+                // Try to update the receiver's last_id
+                try
+                {
+                    var query1 = new Query()
+                    {
+                        TableName = "users",
+                        Values = new List<List<string>>()
+                {
+                    new List<string>()
+                    {
+                        $"last_id={message.sender_id}",
+                    }
+                },
+                        Conditions = new List<string>() { $"user_id={message.receiver_id}" }
+                    };
+
+                    // First, update the user's last_id in the users table
+                    var updateResult = _repo.UpdateRecord(query1);
+                    if (updateResult.Contains("Error"))
+                    {
+                        return $"Error: {updateResult}";  // If there was an error updating the user, return the error
+                    }
+                }
+                catch (Exception ex)
+                {
+                    return $"Error in updating user: {ex.Message}";
+                }
+
+                // After successfully updating the user's last_id, insert the message
                 return _repo.InsertRecord(query);
             }
             catch (Exception ex)
             {
-                return $"Error: {ex.Message}";
+                return $"Error: {ex.Message}";  // Catch any error in message sending or query construction
             }
         }
 
 
 
-        // 2️⃣ Fetch All Messages Between Two Users
+
         public List<Message> GetAllMessages(int sender_id, int receiver_id)
         {
             try
@@ -66,7 +97,6 @@ namespace ChatApplication.Services
             }
         }
 
-        // 3️⃣ Update Message Status (Sent, Delivered, Read)
         public string UpdateMessageStatus(int messageId, string status)
         {
             try

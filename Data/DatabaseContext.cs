@@ -107,7 +107,52 @@ namespace ChatApplication.Data
             return records;
         }
 
+        public List<T> ExecuteQuery<T>(string query, Dictionary<string, object> parameters)
+        {
+            List<T> result = new List<T>();
 
+            // Using a connection to PostgreSQL database
+            using (var connection = new NpgsqlConnection(connectionString))
+            {
+                // Open connection
+                connection.Open();
+
+                // Create a command object
+                using (var command = new NpgsqlCommand(query, connection))
+                {
+                    // Add parameters to the command
+                    foreach (var param in parameters)
+                    {
+                        command.Parameters.AddWithValue(param.Key, param.Value ?? DBNull.Value);
+                    }
+
+                    // Execute the query and get the reader
+                    using (var reader = command.ExecuteReader())
+                    {
+                        // Loop through the data reader and map it to the result type
+                        while (reader.Read())
+                        {
+                            var item = Activator.CreateInstance<T>();
+
+                            // Map data from the reader to the properties of T
+                            foreach (var property in typeof(T).GetProperties())
+                            {
+                                // Check if the column exists in the reader
+                                if (reader.GetOrdinal(property.Name) >= 0)
+                                {
+                                    property.SetValue(item, reader[property.Name]);
+                                }
+                            }
+
+                            // Add the item to the result list
+                            result.Add(item);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
 
         public List<string> GetResult(string query)
         {

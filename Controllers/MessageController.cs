@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ChatAppBackend.Models;
 using ChatApplication.Services.Service_Contracts;
-using Microsoft.AspNetCore.SignalR;
-using ChatAppBackend.Hubs;
 
 namespace ChatAppBackend.Controllers
 {
@@ -11,15 +9,13 @@ namespace ChatAppBackend.Controllers
     public class MessageController : ControllerBase
     {
         private readonly IMessageService _messageService;
-        private readonly IHubContext<ChatHub> _hubContext;
 
-        public MessageController(IMessageService messageService, IHubContext<ChatHub> hubContext)
+        public MessageController(IMessageService messageService)
         {
             _messageService = messageService;
-            _hubContext = hubContext;
         }
 
-        // 1️⃣ Send Message (SignalR & HTTP)
+        // 1️⃣ Send Message (HTTP)
         [HttpPost("send")]
         public string SendMessage([FromBody] Message message)
         {
@@ -43,7 +39,6 @@ namespace ChatAppBackend.Controllers
             return Ok(allMessages);
         }
 
-
         // 3️⃣ Update Message Status (HTTP)
         [HttpPatch("status/{messageId}")]
         public IActionResult UpdateMessageStatus(int messageId, [FromBody] string status)
@@ -66,14 +61,10 @@ namespace ChatAppBackend.Controllers
 
         // 5️⃣ Delete Message (HTTP)
         [HttpDelete("delete/{messageId}")]
-        public IActionResult DeleteMessage(int messageId)
+        public string DeleteMessage(int messageId)
         {
             var result = _messageService.DeleteMessage(messageId);
-            if (result == "Success")
-            {
-                return Ok(new { success = true, message = "Message deleted successfully." });
-            }
-            return BadRequest(new { success = false, message = result });
+            return result;
         }
 
         // 6️⃣ Edit Message (HTTP)
@@ -107,6 +98,8 @@ namespace ChatAppBackend.Controllers
             var messages = _messageService.SearchMessages(userId, query);
             return Ok(messages);
         }
+
+        // 9️⃣ Get Contacts (HTTP)
         [HttpGet("GetContacts")]
         public List<int> GetContacts(int id)
         {
@@ -123,12 +116,11 @@ namespace ChatAppBackend.Controllers
             return contacts;
         }
 
+        // 🔟 Get Group Messages (HTTP)
         [HttpGet("GetGroupMessage")]
         public List<Message> GetGroupMessage(int id)
         {
             return _messageService.GetGroupMessage(id);
         }
-
-
     }
 }

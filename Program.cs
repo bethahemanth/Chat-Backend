@@ -2,6 +2,7 @@ using ChatAppBackend.Hubs;
 using ChatApplication;
 using ChatApplication.Data;
 using ChatApplication.Data.ChatAppBackend.Data;
+using ChatApplication.Data.Database1;
 using ChatApplication.Repositories;
 using ChatApplication.Repositories.Service_Contracts;
 using ChatApplication.Services;
@@ -16,7 +17,6 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
-        builder.Services.AddSignalR(); // Register SignalR services
 
         builder.Services.AddCors(options =>
         {
@@ -50,6 +50,7 @@ public class Program
         builder.Services.AddScoped<IRepo, Repo>();
         builder.Services.AddScoped<IDatabaseContext, DatabaseContext>();
         builder.Services.AddScoped<IGroupMembers, GroupMembersService>();
+        builder.Services.AddScoped<IDatabaseContext1, DatabaseContext1>();
 
         var app = builder.Build();
 
@@ -57,10 +58,7 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger(); // Enable Swagger middleware
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ChatApp API v1");
-            }); // Enable Swagger UI middleware
+            app.UseSwaggerUI(); // Enable Swagger UI middleware
         }
 
         app.UseHttpsRedirection();
@@ -69,7 +67,6 @@ public class Program
         app.UseAuthorization();
         app.UseStaticFiles();
         app.MapControllers(); // Map API controllers
-        app.MapHub<ChatHub>("/chatHub");
         app.Run(); // Run the application
     }
 }

@@ -2,8 +2,10 @@
 using ChatApplication.Services;
 using ChatApplication.Services.Service_Contracts;
 using Microsoft.AspNetCore.Mvc;
+
 [ApiController]
 [Route("api/[controller]/[action]")]
+
 public class UserController : ControllerBase
 {
     private readonly IUserService _userService;
@@ -19,19 +21,22 @@ public class UserController : ControllerBase
         return _userService.RegisterUser(user);
     }
 
-   [HttpGet]
-[ActionName("GetUserByID")]
-public User GetUserByID(int id)
-{
-    var user = _userService.GetUser(id);
+   
 
-    if (user != null && !string.IsNullOrEmpty(user.profile_picture))
+
+    [HttpGet]
+    [ActionName("GetUserByID")]
+    public User GetUserByID(int id)
     {
-        user.profile_picture = $"http://localhost:5195/uploads/{Path.GetFileName(user.profile_picture)}";
-    }
+        var user = _userService.GetUser(id);
+                                                                            
+        if (user != null && !string.IsNullOrEmpty(user.profile_picture))
+        {
+            user.profile_picture = $"http://localhost:5195/uploads/{Path.GetFileName(user.profile_picture)}";
+        }
 
-    return user;
-}
+        return user;
+    }
 
     [HttpGet]
     [ActionName("GetUser")]
@@ -59,6 +64,14 @@ public User GetUserByID(int id)
 
         return result;
     }
+
+    [HttpGet]
+    [ActionName("GetUserById1")]
+    public User GetUser(int id)
+    {
+        return _userService.GetUser(id);
+    }
+
 
     [HttpPut]
     [ActionName("Update")]
@@ -99,34 +112,78 @@ public User GetUserByID(int id)
         return result;
     }
 
-      [HttpPost]
-  [ActionName("UploadProfilePicture")]
-  public IActionResult UploadProfilePicture([FromForm] IFormFile file)
-  {
-      if (file == null || file.Length == 0)
-      {
-          return BadRequest(new { message = "No file uploaded" });
-      }
+    [HttpGet]
+    [ActionName("GetLastestUserById")]
+    public int GetLatestUserById(int user_id)
+    {
+        return _userService.GetLatestUserById(user_id);
+    }
 
-      string uploadsFolder = Path.Combine("wwwroot/uploads");
-      if (!Directory.Exists(uploadsFolder))
-      {
-          Directory.CreateDirectory(uploadsFolder);
-      }
 
-      // Generate a unique filename
-      string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
-      string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+    //    [HttpPost]
+    //  [Consumes("multipart/form-data")]
+    //  [ActionName("UploadProfilePicture")]
+    //public IActionResult UploadProfilePicture([FromForm] IFormFile file)
+    //{
+    //    if (file == null || file.Length == 0)
+    //    {
+    //        return BadRequest(new { message = "No file uploaded" });
+    //    }
 
-      // Save the file
-      using (var fileStream = new FileStream(filePath, FileMode.Create))
-      {
-          file.CopyTo(fileStream);
-      }
+    //    string uploadsFolder = Path.Combine("wwwroot/uploads");
+    //    if (!Directory.Exists(uploadsFolder))
+    //    {
+    //        Directory.CreateDirectory(uploadsFolder);
+    //    }
 
-      // **Return the correct absolute URL**
-      string fileUrl = $"http://localhost:5195/uploads/{uniqueFileName}";
-      return Ok(new { imageUrl = fileUrl });
-  }
+    //    // Generate a unique filename
+    //    string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+    //    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+    //    // Save the file
+    //    using (var fileStream = new FileStream(filePath, FileMode.Create))
+    //    {
+    //        file.CopyTo(fileStream);
+    //    }
+
+    //    // **Return the correct absolute URL**
+    //    string fileUrl = $"http://localhost:5195/uploads/{uniqueFileName}";
+    //    return Ok(new { imageUrl = fileUrl });
+    //}
+
+    [HttpPost("upload-profile-picture")]
+    [Consumes("multipart/form-data")]
+    [ActionName("UploadProfilePicture")]
+    [ProducesResponseType(typeof(object), 200)]
+    [ProducesResponseType(400)]
+    public async Task<IActionResult> UploadProfilePicture([FromForm] IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            return BadRequest(new { message = "No file uploaded" });
+        }
+
+        // Define the uploads folder (in wwwroot)
+        string uploadsFolder = Path.Combine("wwwroot", "uploads");
+        if (!Directory.Exists(uploadsFolder))
+        {
+            Directory.CreateDirectory(uploadsFolder);
+        }
+
+        // Generate a unique filename for the uploaded file
+        string uniqueFileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+        string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        // Save the uploaded file to the specified path
+        using (var fileStream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(fileStream);
+        }
+
+        // Return the URL of the uploaded file
+        string fileUrl = $"http://localhost:5195/uploads/{uniqueFileName}";
+        return Ok(new { imageUrl = fileUrl });
+    }
+
 
 }
